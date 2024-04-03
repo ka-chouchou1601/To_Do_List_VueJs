@@ -2,12 +2,13 @@
   <div id="app">
     <task-list-component
       :tasks="tasks"
-      listTitle="My Task List"
+      :listTitle="listTitle"
       @task-added="addTask"
       @task-removed="removeTask"
       @task-updated="updateTask"
       @clear-completed="clearCompleted"
       @clear-all="clearAll"
+      @list-title-updated="updateListTitle"
     ></task-list-component>
   </div>
 </template>
@@ -22,6 +23,7 @@ export default {
   },
   data() {
     return {
+      listTitle: "My Task List",
       tasks: [
         { id: 1, title: "Task 1", completed: false },
         { id: 2, title: "Task 2", completed: true },
@@ -45,10 +47,13 @@ export default {
     clearAll() {
       this.tasks = [];
     },
+    updateListTitle(title) {
+      this.listTitle = title;
+    },
   },
 };
 </script>
 
 <style>
-/* Vos styles CSS globaux ici */
+/* Your global CSS styles here */
 </style>

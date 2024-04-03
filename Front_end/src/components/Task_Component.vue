@@ -2,14 +2,14 @@
   <div class="container">
     <div class="task">
       <div class="form">
-        <h2>{{ listTitle }}</h2>
-        <input
-          type="text"
-          placeholder="Ajouter une tâche"
-          v-model="newTask"
-          @keyup.enter="addTask"
-        />
-        <button @click="addTask"><i class="fas fa-plus"></i></button>
+        <h2 @dblclick="startEditingTitle">
+          <span v-if="!editingTitle">{{ listTitle }}</span>
+          <span v-else>
+            <input type="text" v-model="editedTitle" @keyup.enter="saveEditTitle" @blur="saveEditTitle">
+          </span>
+        </h2>
+        <input v-if="!editingTitle" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
+        <button v-if="!editingTitle" @click="addTask"><i class="fas fa-plus"></i></button>
       </div>
       <input type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
       <div class="taskItems">
@@ -50,7 +50,9 @@ export default {
   data() {
     return {
       newTask: "",
-      searchQuery: ""
+      searchQuery: "",
+      editingTitle: false,
+      editedTitle: "",
     };
   },
   computed: {
@@ -84,10 +86,18 @@ export default {
     removeTask(index) {
       this.$emit('task-removed', index);
     },
+    startEditingTitle() {
+      this.editingTitle = true;
+      this.editedTitle = this.listTitle;
+    },
+    saveEditTitle() {
+      this.$emit('title-edited', this.editedTitle);
+      this.editingTitle = false;
+    },
   },
 };
 </script>
 
 <style scoped>
-/* Vos styles CSS spécifiques ici */
+/* Your specific CSS styles here */
 </style>

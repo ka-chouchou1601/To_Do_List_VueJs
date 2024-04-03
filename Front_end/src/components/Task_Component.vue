@@ -1,37 +1,38 @@
 <template>
   <div class="container">
     <div class="task">
-      <div class="title">
-        <h1> To Do List</h1>
-      </div>
       <div class="form">
+        <h2>{{ listTitle }}</h2>
         <input
           type="text"
-          placeholder="New Task"
+          placeholder="Ajouter une tâche"
           v-model="newTask"
           @keyup.enter="addTask"
         />
         <button @click="addTask"><i class="fas fa-plus"></i></button>
       </div>
+      <input type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
       <div class="taskItems">
         <ul>
-          <li v-if="tasks.length === 0" class="empty-task">No tasks yet.</li>
-          <task-item
-            v-for="(task, index) in tasks"
-            :key="task.id"
-            :task="task"
-            @remove="removeTask(index)"
-            @complete="completeTask(task)"
-          ></task-item>
+          <li v-if="filteredTasks.length === 0" class="empty-task">Aucune tâche en cours.</li>
+          <transition-group name="fade" tag="div">
+            <task-item
+              v-for="(task, index) in filteredTasks"
+              :key="task.id"
+              :task="task"
+              @update="updateTask(index, $event)"
+              @remove="removeTask(index)"
+            ></task-item>
+          </transition-group>
         </ul>
       </div>
       <div class="clearBtns">
-        <button @click="clearCompleted">Clear completed</button>
-        <button @click="clearAll">Clear all</button>
+        <button @click="clearCompleted">Supprimer les tâches terminées</button>
+        <button @click="clearAll">Supprimer toutes les tâches</button>
       </div>
       <div class="pendingTasks">
-        <span v-if="incomplete === 0">No pending tasks.</span>
-        <span v-else>Pending Tasks: {{ incomplete }}</span>
+        <span v-if="incomplete === 0">Aucune tâche en attente.</span>
+        <span v-else>Tâches en attente: {{ incomplete }}</span>
       </div>
     </div>
   </div>
@@ -42,36 +43,34 @@ import TaskItem from "./Task-item.vue";
 
 export default {
   name: "TaskListComponent",
-  props: ['tasks'],
+  props: ['tasks', 'listTitle'],
   components: {
     TaskItem,
   },
   data() {
     return {
       newTask: "",
+      searchQuery: ""
     };
   },
   computed: {
     incomplete() {
-      return this.tasks.filter(this.inProgress).length;
+      return this.tasks.filter(task => !task.completed).length;
+    },
+    filteredTasks() {
+      return this.tasks.filter(task => task.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
     },
   },
   methods: {
     addTask() {
-      if (this.newTask) {
+      if (this.newTask.trim() !== "") {
         this.$emit('task-added', {
           id: Date.now(),
-          title: this.newTask,
+          title: this.newTask.trim(),
           completed: false,
         });
         this.newTask = "";
       }
-    },
-    inProgress(task) {
-      return !this.isCompleted(task);
-    },
-    isCompleted(task) {
-      return task.completed;
     },
     clearCompleted() {
       this.$emit('clear-completed');
@@ -79,8 +78,8 @@ export default {
     clearAll() {
       this.$emit('clear-all');
     },
-    completeTask(task) {
-      this.$emit('task-completed', task);
+    updateTask(index, updatedTask) {
+      this.$emit('task-updated', { index, task: updatedTask });
     },
     removeTask(index) {
       this.$emit('task-removed', index);
@@ -90,65 +89,5 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  max-width: 600px;
-  margin: auto;
-}
-
-.task {
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-}
-
-.title h1 {
-  margin: 0;
-  font-size: 24px;
-}
-
-.form {
-  margin-top: 20px;
-}
-
-.form input[type="text"] {
-  padding: 8px;
-  width: calc(100% - 40px);
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-.form button {
-  padding: 8px;
-  margin-left: 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.taskItems ul {
-  list-style: none;
-  padding: 0;
-}
-
-.clearBtns button {
-  padding: 8px 20px;
-  margin-right: 10px;
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.pendingTasks span {
-  font-weight: bold;
-}
-
-.empty-task {
-  color: #999;
-  font-style: italic;
-}
+/* Vos styles CSS spécifiques ici */
 </style>

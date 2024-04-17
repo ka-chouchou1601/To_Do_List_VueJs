@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import axios from 'axios'; // Import Axios for HTTP requests
 import TaskItem from "./Task-item.vue";
 
 export default {
@@ -66,25 +67,52 @@ export default {
   methods: {
     addTask() {
       if (this.newTask.trim() !== "") {
-        this.$emit('task-added', {
-          id: Date.now(),
-          title: this.newTask.trim(),
-          completed: false,
-        });
-        this.newTask = "";
+        axios.post('/api/tasks', { title: this.newTask.trim() })
+          .then(response => {
+            this.$emit('task-added', response.data);
+            this.newTask = ""; // Clear input after successful addition
+          })
+          .catch(error => {
+            console.error('Error adding task:', error);
+          });
       }
     },
     clearCompleted() {
-      this.$emit('clear-completed');
+      axios.delete('/api/tasks/completed')
+        .then(response => {
+          this.$emit('clear-completed');
+        })
+        .catch(error => {
+          console.error('Error clearing completed tasks:', error);
+        });
     },
     clearAll() {
-      this.$emit('clear-all');
+      axios.delete('/api/tasks/all')
+        .then(response => {
+          this.$emit('clear-all');
+        })
+        .catch(error => {
+          console.error('Error clearing all tasks:', error);
+        });
     },
     updateTask(index, updatedTask) {
-      this.$emit('task-updated', { index, task: updatedTask });
+      axios.put(`/api/tasks/${updatedTask.id}`, updatedTask)
+        .then(response => {
+          this.$emit('task-updated', { index, task: response.data });
+        })
+        .catch(error => {
+          console.error('Error updating task:', error);
+        });
     },
     removeTask(index) {
-      this.$emit('task-removed', index);
+      const taskId = this.filteredTasks[index].id;
+      axios.delete(`/api/tasks/${taskId}`)
+        .then(response => {
+          this.$emit('task-removed', index);
+        })
+        .catch(error => {
+          console.error('Error removing task:', error);
+        });
     },
     startEditingTitle() {
       this.editingTitle = true;
@@ -98,6 +126,58 @@ export default {
 };
 </script>
 
+
+
 <style scoped>
-/* Your specific CSS styles here */
+.container {
+  position: relative;
+}
+
+.task {
+  background-color: #fff; /* White background color for the task area */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
+}
+
+.form {
+  margin-bottom: 20px;
+}
+
+.form input[type="text"], .form button {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.form button {
+  background-color: #3498db; /* Blue color for the add task button */
+  color: white;
+  cursor: pointer;
+}
+
+.form button:hover {
+  background-color: #2980b9; /* Darker blue color on hover */
+}
+
+input[type="text"] {
+  width: 200px;
+}
+
+/* Additional CSS styles for the search input */
+input[type="text"][placeholder="Rechercher une tâche..."] {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Additional CSS styles for the pending tasks section */
+.pendingTasks {
+  margin-top: 20px;
+  font-weight: bold;
+}
 </style>

@@ -1,14 +1,14 @@
+<!-- App.vue -->
 <template>
   <div id="app">
     <task-list-component
       :tasks="tasks"
-      :listTitle="listTitle"
+      listTitle="My Task List"
       @task-added="addTask"
       @task-removed="removeTask"
       @task-updated="updateTask"
       @clear-completed="clearCompleted"
       @clear-all="clearAll"
-      @list-title-updated="updateListTitle"
     ></task-list-component>
   </div>
 </template>
@@ -23,7 +23,6 @@ export default {
   },
   data() {
     return {
-      listTitle: "My Task List",
       tasks: [
         { id: 1, title: "Task 1", completed: false },
         { id: 2, title: "Task 2", completed: true },
@@ -47,13 +46,16 @@ export default {
     clearAll() {
       this.tasks = [];
     },
-    updateListTitle(title) {
-      this.listTitle = title;
-    },
   },
 };
 </script>
 
 <style>
-/* Your global CSS styles here */
+/* Global CSS styles */
+body {
+  background-color: #f0f0f0; /* Change the background color of the body */
+  background-image: url('./components/bg.jpg'); 
+  background-size: cover;
+  background-position: center;
+}
 </style>

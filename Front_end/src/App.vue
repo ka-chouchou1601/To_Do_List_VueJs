@@ -50,12 +50,4 @@ export default {
 };
 </script>
 
-<style>
-/* Global CSS styles */
-body {
-  background-color: #f0f0f0; /* Change the background color of the body */
-  background-image: url('./components/bg.jpg'); 
-  background-size: cover;
-  background-position: center;
-}
-</style>
+

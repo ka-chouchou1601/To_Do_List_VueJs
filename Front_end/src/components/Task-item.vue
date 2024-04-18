@@ -73,7 +73,7 @@ export default {
 .remove-btn {
   background-color: transparent;
   border: none;
-  color: #999;
+ 
   cursor: pointer;
 }
 

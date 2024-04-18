@@ -1,5 +1,5 @@
 /*
-general 
+General
 -------
 */
 * {
@@ -10,11 +10,11 @@ general
 
 body {
   font: 15px/1.4 "Poppins", sans-serif;
-  /* Use background image */
-  background-image: url('bg.jpg'); /* Replace 'path_to_your_image.jpg' with your image path */
-  background-size: cover; /* Cover the entire background */
-  background-position: center; /* Center the background image */
-  color: #333;
+
+  background-image: url('bg.jpg'); 
+  background-size: cover; /* Couvrir l'arrière-plan entier */
+  background-position: center; /* Centrer l'image de fond */
+  background-color: white;
 }
 
 #app {
@@ -66,7 +66,7 @@ ul {
 }
 
 /* 
-task 
+Task
 ----
 */
 .task {
@@ -87,14 +87,18 @@ task
 }
 
 .form button {
-  background: none;
+  background-color: #BB9A87; /* Couleur de fond initiale du bouton */
   border: none;
-  color: #904F37; /* Changed button color */
-  font-size: 16px; /* Reduced button font size */
-  position: absolute;
-  top: 50%;
-  right: 20px;
-  transform: translateY(-50%);
+  color: #fff; /* Couleur du texte */
+  font-size: 16px;
+  padding: 8px 16px; /* Rembourrage ajusté pour le bouton */
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Transition en douceur pour l'effet de survol */
+}
+
+.form button:hover {
+  background-color: #E8E0D5; /* Couleur de fond du bouton au survol */
 }
 
 .clearBtns {
@@ -105,16 +109,16 @@ task
 
 .clearBtns button {
   width: 100%;
-  background: #4ec5c1;
+  background: #B86848;
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 8px; /* Reduced button padding */
+  padding: 10px;
   margin: 0 5px;
 }
 
 .clearBtns button:hover {
-  background: #333;
+  background:  #BB9A87;
 }
 
 .pendingTasks {
@@ -122,7 +126,7 @@ task
 }
 
 /* 
-task items
+Task items
 ----------
 */
 .taskItems {
@@ -132,16 +136,17 @@ task items
 .taskItems li {
   display: flex;
   justify-content: space-between;
-  margin: 0 0 25px; /* Increased margin-bottom for task items */
+  margin: 0 0 20px;
 }
 
 .taskItems button {
   background: none;
   border: none;
+  color: #B86848;
 }
 
 .taskItems button:hover {
-  color: #4ec5c1;
+  color: #BB9A87;
 }
 
 .taskItems .toggle i {

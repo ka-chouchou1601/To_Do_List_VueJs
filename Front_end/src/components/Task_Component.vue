@@ -39,8 +39,10 @@
 </template>
 
 <script>
-import axios from 'axios'; // Import Axios for HTTP requests
+import axios from 'axios';
 import TaskItem from "./Task-item.vue";
+
+const apiUrl = 'http://localhost:8080/api/tasks'; // Base URL for server
 
 export default {
   name: "TaskListComponent",
@@ -67,7 +69,7 @@ export default {
   methods: {
     addTask() {
       if (this.newTask.trim() !== "") {
-        axios.post('/api/tasks', { title: this.newTask.trim() })
+        axios.post(apiUrl, { title: this.newTask.trim() })
           .then(response => {
             this.$emit('task-added', response.data);
             this.newTask = ""; // Clear input after successful addition
@@ -78,7 +80,7 @@ export default {
       }
     },
     clearCompleted() {
-      axios.delete('/api/tasks/completed')
+      axios.delete(apiUrl)
         .then(response => {
           this.$emit('clear-completed');
         })
@@ -87,7 +89,7 @@ export default {
         });
     },
     clearAll() {
-      axios.delete('/api/tasks/all')
+      axios.delete(apiUrl)
         .then(response => {
           this.$emit('clear-all');
         })
@@ -96,7 +98,7 @@ export default {
         });
     },
     updateTask(index, updatedTask) {
-      axios.put(`/api/tasks/${updatedTask.id}`, updatedTask)
+      axios.put(`${apiUrl}/${updatedTask.id}`, updatedTask)
         .then(response => {
           this.$emit('task-updated', { index, task: response.data });
         })
@@ -106,7 +108,7 @@ export default {
     },
     removeTask(index) {
       const taskId = this.filteredTasks[index].id;
-      axios.delete(`/api/tasks/${taskId}`)
+      axios.delete(`${apiUrl}/${taskId}`)
         .then(response => {
           this.$emit('task-removed', index);
         })
@@ -128,56 +130,4 @@ export default {
 
 
 
-<style scoped>
-.container {
-  position: relative;
-}
 
-.task {
-  background-color: #fff; /* White background color for the task area */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
-}
-
-.form {
-  margin-bottom: 20px;
-}
-
-.form input[type="text"], .form button {
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-.form button {
-  background-color: #3498db; /* Blue color for the add task button */
-  color: white;
-  cursor: pointer;
-}
-
-.form button:hover {
-  background-color: #2980b9; /* Darker blue color on hover */
-}
-
-input[type="text"] {
-  width: 200px;
-}
-
-/* Additional CSS styles for the search input */
-input[type="text"][placeholder="Rechercher une tâche..."] {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Additional CSS styles for the pending tasks section */
-.pendingTasks {
-  margin-top: 20px;
-  font-weight: bold;
-}
-</style>

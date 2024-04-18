@@ -9,8 +9,10 @@ General
 }
 
 body {
-  font: 15px/1.4 "Poppins", sans-serif;
-  background-image: url('bg.jpg'); 
+  font:
+    15px/1.4 "Poppins",
+    sans-serif;
+  background-image: url("bg.jpg");
   background-size: cover; /* Cover the entire background */
   background-position: center; /* Center the background image */
   background-color: #fff; /* Fallback color */
@@ -19,9 +21,8 @@ body {
 }
 
 #app {
-  padding: 20px ;
+  padding: 20px;
   height: 10px;
-
 }
 
 .container {
@@ -32,7 +33,9 @@ body {
 
 input[type="text"] {
   height: 50px;
-  font: 15px/1.4 "Poppins", sans-serif;
+  font:
+    15px/1.4 "Poppins",
+    sans-serif;
   padding: 15px;
   background: #f3f3f3;
   color: #333;
@@ -48,7 +51,9 @@ input[type="text"]:focus {
 
 button {
   cursor: pointer;
-  font: 15px/1.4 "Poppins", sans-serif;
+  font:
+    15px/1.4 "Poppins",
+    sans-serif;
   color: #fff;
   border: none;
   border-radius: 10px;
@@ -66,7 +71,7 @@ h1 {
   font-size: 36px; /* Augmentation de la taille du titre */
   text-align: center;
   margin-bottom: 30px;
-  color: #BB9A87; /* Nouvelle couleur pour le titre */
+  color: #bb9a87; /* Nouvelle couleur pour le titre */
 }
 
 ul {
@@ -82,7 +87,7 @@ Task
   background: #fff;
   border-radius: 25px;
   padding: 40px;
-  box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.1);
   margin-bottom: 40px; /* Espacement supplémentaire entre les tâches */
 }
 
@@ -90,19 +95,30 @@ Task
   text-align: center;
   margin-bottom: 30px;
   font-size: 28px;
-  color: #B86848; /* Nouvelle couleur pour le titre */
+  color: #b86848; /* Nouvelle couleur pour le titre */
 }
 
 .form {
-  display: flex; /* Utilisation de flexbox pour aligner les éléments sur une ligne */
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 30px;
 }
 
-.add-task-input,
-.search-input {
-  flex: 1; /* Pour que les deux champs s'étendent pour remplir l'espace disponible */
+.task-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.add-task-container {
+  position: relative;
+  display: flex;
+  align-items: left;
+  margin-right: 30px; /* Adjust margin between task input and search input */
+}
+
+.add-task-input {
+  flex: 1; /* Allow input to grow and fill available space */
   height: 50px;
   padding: 15px;
   background: #f3f3f3;
@@ -110,22 +126,72 @@ Task
   border: 1px solid transparent;
   border-radius: 10px;
   transition: border 0.3s linear;
-  margin-right: 10px;
-  width: calc(50% - 5px); /* Réduire la largeur des champs */
 }
 
 .add-task-button {
   cursor: pointer;
-  color: #fff;
+  color: #b86848;
+  /* background-color:#fff; */
   border: none;
   border-radius: 10px;
-  padding: 12px 20px;
-  background-color: #BB9A87;
+  padding: 12px 16px;
+  height: 45px;
   transition: background-color 0.3s ease;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+.add-task-button :hover {
+  color: #bb9a87;
+}
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.add-task-button:hover {
-  background-color: #B86848;
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  flex: 1; /* Allow search input to grow and fill remaining space */
+  height: 50px;
+  padding: 20px;
+
+  background: #f3f3f3;
+  color: #333;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: border 0.3s linear;
+}
+
+.search-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  cursor: pointer;
+  color: #b86848;
+  background-color: transparent;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.search-button:hover {
+  color: #bb9a87;
+}
+
+/* Adjust width of inputs for responsiveness */
+@media (max-width: 768px) {
+  .task-input-group {
+    width: 100%; /* Full width on smaller screens */
+  }
 }
 
 .clearBtns {
@@ -136,16 +202,16 @@ Task
 
 .clearBtns button {
   width: 48%; /* Ajustement de la largeur des boutons */
-  background: #B86848;
+  background: #b86848;
 }
 
 .clearBtns button:hover {
-  background: #BB9A87;
+  background: #bb9a87;
 }
 
 .pendingTasks {
   font-weight: bold;
-  color: #B86848;
+  color: #b86848;
 }
 
 /* 
@@ -162,27 +228,27 @@ Task items
   align-items: center;
   margin-bottom: 20px;
   padding: 15px;
-  background-color: #E8E0D5;
+  background-color: #e8e0d5;
   border-radius: 10px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease;
 }
 
 .taskItems li:hover {
-  background-color: #BB9A87;
+  background-color: #bb9a87;
   color: #fff;
 }
 
 .taskItems button {
   background: none;
   border: none;
-  color: #B86848;
+  color: #b86848;
   font-size: 20px;
   cursor: pointer;
 }
 
 .taskItems button:hover {
-  color: #BB9A87;
+  color: #bb9a87;
 }
 
 .taskItems .toggle {

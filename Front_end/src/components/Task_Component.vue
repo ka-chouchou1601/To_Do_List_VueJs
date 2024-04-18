@@ -7,13 +7,22 @@
           <input type="text" v-model="editedTitle" @keyup.enter="saveEditTitle" @blur="saveEditTitle">
         </span>
       </h1>
-      <div class="form">
-        <div class="task-input-group">
-          <input class="add-task-input" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
-          <button class="add-task-button" @click="addTask"><i class="fas fa-plus"></i></button>
-        </div>
+      
+     <div class="form">
+  <div class="task-input-group">
+    <div class="add-task-container">
+      <input class="add-task-input" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
+      <button class="add-task-button" @click="addTask"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="search-container">
+      <div class="search-wrapper">
         <input class="search-input" type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
+        <button class="search-button"><i class="fas fa-search"></i></button>
       </div>
+    </div>
+  </div>
+</div>
+
       <div class="taskItems">
         <ul>
           <li v-if="filteredTasks.length === 0" class="empty-task">Aucune tâche en cours.</li>

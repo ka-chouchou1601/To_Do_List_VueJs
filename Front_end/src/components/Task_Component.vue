@@ -1,17 +1,19 @@
 <template>
   <div class="container">
     <div class="task">
+      <h1 class="task-title" @dblclick="startEditingTitle">
+        <span v-if="!editingTitle">{{ listTitle }}</span>
+        <span v-else>
+          <input type="text" v-model="editedTitle" @keyup.enter="saveEditTitle" @blur="saveEditTitle">
+        </span>
+      </h1>
       <div class="form">
-        <h2 @dblclick="startEditingTitle">
-          <span v-if="!editingTitle">{{ listTitle }}</span>
-          <span v-else>
-            <input type="text" v-model="editedTitle" @keyup.enter="saveEditTitle" @blur="saveEditTitle">
-          </span>
-        </h2>
-        <input v-if="!editingTitle" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
-        <button v-if="!editingTitle" @click="addTask"><i class="fas fa-plus"></i></button>
+        <div class="task-input-group">
+          <input class="add-task-input" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
+          <button class="add-task-button" @click="addTask"><i class="fas fa-plus"></i></button>
+        </div>
+        <input class="search-input" type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
       </div>
-      <input type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
       <div class="taskItems">
         <ul>
           <li v-if="filteredTasks.length === 0" class="empty-task">Aucune tâche en cours.</li>
@@ -128,6 +130,23 @@ export default {
 };
 </script>
 
+<style>
+/* Ajoutez votre style CSS personnalisé ici */
+.task-title {
+  font-size: 36px;
+  text-align: center;
+  color: #BB9A87;
+  margin-bottom: 30px;
+  cursor: pointer; /* Ajoutez un curseur indiquant que le titre est éditable */
+}
 
-
-
+.task-title input {
+  font-size: 36px;
+  text-align: center;
+  color: #BB9A87;
+  background: transparent;
+  border: none;
+  outline: none;
+  width: auto;
+}
+</style>

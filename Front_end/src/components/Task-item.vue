@@ -1,8 +1,8 @@
 <template>
   <li>
-    <div class="task-item" @click="startEditing">
+    <div class="task-item">
       <input type="checkbox" v-model="isChecked" @click.stop>
-      <span v-if="!editing" :class="{ 'completed': isChecked }">{{ task.title }}</span>
+      <span v-if="!editing" :class="{ 'completed': isChecked }" @click="startEditing">{{ task.title }}</span>
       <div v-else class="edit-form">
         <input type="text" v-model="editedTitle" @keyup.enter="saveEdit">
         <button @click="saveEdit"><i class="far fa-save"></i></button>
@@ -13,7 +13,6 @@
 </template>
 
 <script>
-
 export default {
   name: "TaskItem",
   props: ["task"],
@@ -36,6 +35,7 @@ export default {
   methods: {
     startEditing() {
       this.editing = true;
+      this.editedTitle = this.task.title;
     },
     saveEdit() {
       this.$emit('update', { ...this.task, title: this.editedTitle });
@@ -50,35 +50,29 @@ export default {
 
 <style scoped>
 .task-item {
-  cursor: pointer;
   display: flex;
   align-items: center;
-}
-
-.task-item span {
-  margin-left: 5px;
-}
-
-.edit-form input[type="text"] {
-  flex: 1;
-  padding: 5px;
-}
-
-.edit-form button {
-  margin-left: 5px;
-  background-color: transparent;
-  border: none;
-}
-
-.remove-btn {
-  background-color: transparent;
-  border: none;
- 
-  cursor: pointer;
+  margin-bottom: 10px;
 }
 
 .completed {
   text-decoration: line-through;
-  color: #999;
+  color: #888;
+}
+
+.edit-form {
+  display: flex;
+  align-items: center;
+}
+
+.edit-form input {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.remove-btn {
+  margin-left: 10px;
+  padding: 5px;
+  cursor: pointer;
 }
 </style>

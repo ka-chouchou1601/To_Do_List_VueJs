@@ -2,30 +2,52 @@
   <div class="container">
     <div class="task">
       <h1 class="task-title" @dblclick="startEditingTitle">
-        <span v-if="!editingTitle">{{ listTitle }}</span>
+        <span v-if="!editingTitle">{{ displayTitle }}</span>
         <span v-else>
-          <input type="text" v-model="editedTitle" @keyup.enter="saveEditTitle" @blur="saveEditTitle">
+          <input
+            type="text"
+            v-model="editedTitle"
+            @keyup.enter="saveEditTitle"
+            @blur="saveEditTitle"
+          />
         </span>
       </h1>
-      
-     <div class="form">
-  <div class="task-input-group">
-    <div class="add-task-container">
-      <input class="add-task-input" type="text" placeholder="Ajouter une tâche" v-model="newTask" @keyup.enter="addTask" />
-      <button class="add-task-button" @click="addTask"><i class="fas fa-plus"></i></button>
-    </div>
-    <div class="search-container">
-      <div class="search-wrapper">
-        <input class="search-input" type="text" v-model="searchQuery" placeholder="Rechercher une tâche...">
-        <button class="search-button"><i class="fas fa-search"></i></button>
+
+      <div class="form">
+        <div class="task-input-group">
+          <div class="add-task-container">
+            <input
+              class="add-task-input"
+              type="text"
+              placeholder="Ajouter une tâche"
+              v-model="newTask"
+              @keyup.enter="addTask"
+            />
+            <button class="add-task-button" @click="addTask">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          <div class="search-container">
+            <div class="search-wrapper">
+              <input
+                class="search-input"
+                type="text"
+                v-model="searchQuery"
+                placeholder="Rechercher une tâche..."
+              />
+              <button class="search-button">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
       <div class="taskItems">
         <ul>
-          <li v-if="filteredTasks.length === 0" class="empty-task">Aucune tâche en cours.</li>
+          <li v-if="filteredTasks.length === 0" class="empty-task">
+            Ajoute une tâche à ta liste
+          </li>
           <transition-group name="fade" tag="div">
             <task-item
               v-for="(task, index) in filteredTasks"
@@ -37,10 +59,12 @@
           </transition-group>
         </ul>
       </div>
+
       <div class="clearBtns">
         <button @click="clearCompleted">Supprimer les tâches terminées</button>
         <button @click="clearAll">Supprimer toutes les tâches</button>
       </div>
+
       <div class="pendingTasks">
         <span v-if="incomplete === 0">Aucune tâche en attente.</span>
         <span v-else>Tâches en attente: {{ incomplete }}</span>
@@ -50,14 +74,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import TaskItem from "./Task-item.vue";
 
-const apiUrl = 'http://localhost:8080/api/tasks'; // Base URL for server
+const apiUrl = "http://localhost:8080/api/tasks"; // Base URL for server
 
 export default {
   name: "TaskListComponent",
-  props: ['tasks', 'listTitle'],
+  props: ["tasks", "listTitle"], // Add listTitle prop
   components: {
     TaskItem,
   },
@@ -66,73 +90,84 @@ export default {
       newTask: "",
       searchQuery: "",
       editingTitle: false,
-      editedTitle: "",
+      editedTitle: "", // Initialize editedTitle data property
+      displayTitle: this.listTitle, // Initialize displayTitle with the initial listTitle
     };
   },
   computed: {
     incomplete() {
-      return this.tasks.filter(task => !task.completed).length;
+      return this.tasks.filter((task) => !task.completed).length;
     },
     filteredTasks() {
-      return this.tasks.filter(task => task.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
+      return this.tasks.filter((task) =>
+        task.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
   },
   methods: {
     addTask() {
       if (this.newTask.trim() !== "") {
-        axios.post(apiUrl, { title: this.newTask.trim() })
-          .then(response => {
-            this.$emit('task-added', response.data);
+        axios
+          .post(apiUrl, { title: this.newTask.trim() })
+          .then((response) => {
+            this.$emit("task-added", response.data);
             this.newTask = ""; // Clear input after successful addition
           })
-          .catch(error => {
-            console.error('Error adding task:', error);
+          .catch((error) => {
+            console.error("Error adding task:", error);
           });
       }
     },
     clearCompleted() {
-      axios.delete(apiUrl)
-        .then(response => {
-          this.$emit('clear-completed');
+      axios
+        .delete(apiUrl)
+        .then((response) => {
+          this.$emit("clear-completed");
         })
-        .catch(error => {
-          console.error('Error clearing completed tasks:', error);
+        .catch((error) => {
+          console.error("Error clearing completed tasks:", error);
         });
     },
     clearAll() {
-      axios.delete(apiUrl)
-        .then(response => {
-          this.$emit('clear-all');
+      axios
+        .delete(apiUrl)
+        .then((response) => {
+          this.$emit("clear-all");
         })
-        .catch(error => {
-          console.error('Error clearing all tasks:', error);
+        .catch((error) => {
+          console.error("Error clearing all tasks:", error);
         });
     },
     updateTask(index, updatedTask) {
-      axios.put(`${apiUrl}/${updatedTask.id}`, updatedTask)
-        .then(response => {
-          this.$emit('task-updated', { index, task: response.data });
+      axios
+        .put(`${apiUrl}/${updatedTask.id}`, updatedTask)
+        .then((response) => {
+          this.$emit("task-updated", { index, task: response.data });
         })
-        .catch(error => {
-          console.error('Error updating task:', error);
+        .catch((error) => {
+          console.error("Error updating task:", error);
         });
     },
     removeTask(index) {
       const taskId = this.filteredTasks[index].id;
-      axios.delete(`${apiUrl}/${taskId}`)
-        .then(response => {
-          this.$emit('task-removed', index);
+      axios
+        .delete(`${apiUrl}/${taskId}`)
+        .then((response) => {
+          this.$emit("task-removed", index);
         })
-        .catch(error => {
-          console.error('Error removing task:', error);
+        .catch((error) => {
+          console.error("Error removing task:", error);
         });
     },
     startEditingTitle() {
       this.editingTitle = true;
-      this.editedTitle = this.listTitle;
+      this.editedTitle = this.listTitle; // Set editedTitle to listTitle when editing starts
     },
     saveEditTitle() {
-      this.$emit('title-edited', this.editedTitle);
+      if (this.editedTitle.trim() !== "") {
+        this.$emit("title-edited", this.editedTitle); // Emit the edited title
+        this.displayTitle = this.editedTitle; // Update displayTitle with the edited title
+      }
       this.editingTitle = false;
     },
   },
@@ -144,7 +179,7 @@ export default {
 .task-title {
   font-size: 36px;
   text-align: center;
-  color: #BB9A87;
+  color: #bb9a87;
   margin-bottom: 30px;
   cursor: pointer; /* Ajoutez un curseur indiquant que le titre est éditable */
 }
@@ -152,7 +187,7 @@ export default {
 .task-title input {
   font-size: 36px;
   text-align: center;
-  color: #BB9A87;
+  color: #bb9a87;
   background: transparent;
   border: none;
   outline: none;

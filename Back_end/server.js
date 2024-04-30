@@ -6,11 +6,7 @@ const cors = require("cors");
 app.use(express.json());
 app.use(cors());
 
-let tasks = [
-  { id: 1, title: "Task 1", completed: false },
-  { id: 2, title: "Task 2", completed: true },
-  { id: 3, title: "Task 3", completed: false },
-];
+let tasks = []; // Initialize tasks array as an empty array
 
 app
   .route("/api/tasks")

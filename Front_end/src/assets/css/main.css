@@ -247,9 +247,7 @@ Task items
   cursor: pointer;
 }
 
-.taskItems button:hover {
-  color: #bb9a87;
-}
+
 
 .taskItems .toggle {
   display: flex;

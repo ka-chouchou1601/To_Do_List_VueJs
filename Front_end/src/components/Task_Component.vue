@@ -1,12 +1,11 @@
-<template>
-  <!-- Conteneur principal de la liste de tâches -->
+\<template>
   <div class="container">
     <div class="task">
-      <!-- Titre de la liste -->
+      <!-- Titre de la tâche -->
       <h1 class="task-title" @dblclick="startEditingTitle">
         <span v-if="!editingTitle">{{ displayTitle }}</span>
         <span v-else>
-          <!-- Champ d'édition du titre -->
+          <!-- Ici on a Champ d'édition du titre -->
           <input
             type="text"
             v-model="editedTitle"
@@ -16,11 +15,10 @@
         </span>
       </h1>
 
-      <!-- Formulaire d'ajout de tâches -->
       <div class="form">
         <div class="task-input-group">
           <div class="add-task-container">
-            <!-- Champ d'ajout de tâche -->
+            <!-- Ici on a Champ pour ajouter une nouvelle tâche -->
             <input
               class="add-task-input"
               type="text"
@@ -28,14 +26,13 @@
               v-model="newTask"
               @keyup.enter="addTask"
             />
-            <!-- Bouton d'ajout de tâche -->
             <button class="add-task-button" @click="addTask">
               <i class="fas fa-plus"></i>
             </button>
           </div>
-          <!-- Champ de recherche de tâches -->
           <div class="search-container">
             <div class="search-wrapper">
+              <!-- Ici c'est la partie du Champ de recherche -->
               <input
                 class="search-input"
                 type="text"
@@ -50,16 +47,15 @@
         </div>
       </div>
 
-      <!-- Liste des tâches -->
+      <!--La  Liste des tâches -->
       <div class="taskItems">
         <ul>
-          <!-- Message si aucune tâche n'est présente -->
+          <!--Le  Message qui est aficher si aucune tâche n'est présente -->
           <li v-if="filteredTasks.length === 0" class="empty-task">
             Ajoute une tâche à ta liste
           </li>
-          <!-- Transition d'apparition des tâches -->
+          <!-- La Boucle à travers les tâches -->
           <transition-group name="fade" tag="div">
-            <!-- Affichage des tâches -->
             <task-item
               v-for="(task, index) in filteredTasks"
               :key="task.id"
@@ -71,13 +67,13 @@
         </ul>
       </div>
 
-      <!-- Boutons de suppression de tâches -->
+      <!-- Boutons pour effacer les tâches -->
       <div class="clearBtns">
         <button @click="clearCompleted">Supprimer les tâches terminées</button>
         <button @click="clearAll">Supprimer toutes les tâches</button>
       </div>
 
-      <!-- Compteur de tâches en attente -->
+      <!-- Affichage du nombre de tâches en attente -->
       <div class="pendingTasks">
         <span v-if="incomplete === 0">Aucune tâche en attente.</span>
         <span v-else>Tâches en attente: {{ incomplete }}</span>
@@ -90,178 +86,118 @@
 import axios from "axios";
 import TaskItem from "./Task-item.vue";
 
-const apiUrl = "http://localhost:8000/api/tasks"; // URL de base du serveur
+const apiUrl = "http://localhost:8000/api/tasks"; // URL de base pour le serveur
 
 export default {
   name: "TaskListComponent",
-  props: ["tasks", "listTitle"], // Propriétés de la liste
+  props: ["tasks", "listTitle"], // ce sont Propriétés reçues par le composant
   components: {
     TaskItem,
   },
   data() {
     return {
-      newTask: "", // Nouvelle tâche
-      searchQuery: "", // Requête de recherche
-      editingTitle: false, // Indicateur d'édition du titre
+      newTask: "", // Nouvelle tâche à ajouter
+      searchQuery: "", // Terme de recherche pour filtrer les tâches
+      editingTitle: false, // Indique si le titre est en cours d'édition
       editedTitle: "", // Titre édité
-      displayTitle: this.listTitle, // Titre affiché
+      displayTitle: this.listTitle, // Titre à afficher
     };
   },
   computed: {
-    // Méthode calculée pour déterminer le nombre de tâches incomplètes
     incomplete() {
-      // Filtrer les tâches qui ne sont pas complétées et retourner la longueur du tableau résultant
-      return this.tasks.filter((task) => !task.completed).length;
+      return this.tasks.filter((task) => !task.completed).length; // Nombre de tâches incomplètes
     },
-    // Méthode calculée pour filtrer les tâches en fonction de la requête de recherche
     filteredTasks() {
-      // Convertir la requête de recherche et les titres des tâches en minuscules pour une recherche insensible à la casse
       return this.tasks.filter((task) =>
         task.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      ); // Tâches filtrées en fonction du terme de recherche
     },
   },
- methods: {
-    // Méthode pour récupérer les tâches depuis le serveur
-    fetchTasks() {
-      // Appel à l'API pour récupérer les tâches
-      axios
-        .get(apiUrl)
-        // Traitement de la réponse
-        .then((response) => {
-          // Assignation des données de la réponse aux tâches de l'application
-          this.tasks = response.data;
-        })
-        // Gestion des erreurs
-        .catch((error) => {
-          // Affichage de l'erreur dans la console
-          console.error("Erreur lors de la récupération des tâches :", error);
-        });
-    },
-    // Méthode pour ajouter une nouvelle tâche
+  methods: {
     addTask() {
-      // Vérification si le champ d'ajout de tâche n'est pas vide
+      // Ajoute une nouvelle tâche
       if (this.newTask.trim() !== "") {
-        // Appel à l'API pour ajouter une nouvelle tâche
         axios
           .post(apiUrl, { title: this.newTask.trim() })
-          // Traitement de la réponse
           .then((response) => {
-            // Émission de l'événement indiquant l'ajout de la tâche
-            this.$emit("tâche ajoutée", response.data);
-            // Réinitialisation du champ d'ajout de tâche
-            this.newTask = "";
+            this.$emit("task-added", response.data);
+            this.newTask = ""; // Efface l'entrée après l'ajout réussi
           })
-          // Gestion des erreurs
           .catch((error) => {
-            // Affichage de l'erreur dans la console
-            console.error("Erreur lors de l'ajout de la tâche :", error);
+            console.error("Error adding task:", error);
           });
       }
     },
-    // Méthode pour supprimer les tâches terminées
     clearCompleted() {
-      // Appel à l'API pour supprimer les tâches terminées
+      // Efface les tâches terminées
       axios
         .delete(apiUrl)
-        // Traitement de la réponse
         .then((response) => {
-          // Émission de l'événement indiquant la suppression des tâches terminées
-          this.$emit("effacer terminé");
+          this.$emit("clear-completed");
         })
-        // Gestion des erreurs
         .catch((error) => {
-          // Affichage de l'erreur dans la console
-          console.error("Erreur lors de la suppression des tâches terminées :", error);
+          console.error("Error clearing completed tasks:", error);
         });
     },
-    // Méthode pour supprimer toutes les tâches
     clearAll() {
-      // Appel à l'API pour supprimer toutes les tâches
+      // Efface toutes les tâches
       axios
         .delete(apiUrl)
-        // Traitement de la réponse
         .then((response) => {
-          // Émission de l'événement indiquant la suppression de toutes les tâches
-          this.$emit("effacer tout");
+          this.$emit("clear-all");
         })
-        // Gestion des erreurs
         .catch((error) => {
-          // Affichage de l'erreur dans la console
-          console.error("Erreur lors de la suppression de toutes les tâches :", error);
+          console.error("Error clearing all tasks:", error);
         });
     },
-    // Méthode pour mettre à jour une tâche
     updateTask(index, updatedTask) {
-      // Appel à l'API pour mettre à jour une tâche
+      // Mettre à jour une tâche existante
       axios
         .put(`${apiUrl}/${updatedTask.id}`, updatedTask)
-        // Traitement de la réponse
         .then((response) => {
-          // Émission de l'événement indiquant la mise à jour de la tâche
-          this.$emit("tâche mise à jour", { index, task: response.data });
+          this.$emit("task-updated", { index, task: response.data });
         })
-        // Gestion des erreurs
         .catch((error) => {
-          // Affichage de l'erreur dans la console
-          console.error("Erreur lors de la mise à jour de la tâche :", error);
+          console.error("Error updating task:", error);
         });
     },
-    // Méthode pour supprimer une tâche
     removeTask(index) {
-      // Récupération de l'identifiant de la tâche à supprimer
+      // Supprime une tâche
       const taskId = this.filteredTasks[index].id;
-      // Appel à l'API pour supprimer la tâche
       axios
         .delete(`${apiUrl}/${taskId}`)
-        // Traitement de la réponse
         .then((response) => {
-          // Émission de l'événement indiquant la suppression de la tâche
-          this.$emit("tâche supprimée", index);
+          this.$emit("task-removed", index);
         })
-        // Gestion des erreurs
         .catch((error) => {
-          // Affichage de l'erreur dans la console
-          console.error("Erreur lors de la suppression de la tâche :", error);
+          console.error("Error removing task:", error);
         });
     },
-    // Méthode pour commencer l'édition du titre
     startEditingTitle() {
-      // Activation du mode édition du titre
+      // Démarre l'édition du titre
       this.editingTitle = true;
-      // Initialisation du titre édité avec le titre actuel
-      this.editedTitle = this.listTitle;
+      this.editedTitle = this.listTitle; // Met editedTitle à listTitle quand l'édition commence
     },
-    // Méthode pour sauvegarder le titre édité
     saveEditTitle() {
-      // Vérification si le titre édité n'est pas vide
+      // Sauvegarde le titre édité
       if (this.editedTitle.trim() !== "") {
-        // Émission de l'événement indiquant le titre édité
-        this.$emit("titre modifié", this.editedTitle);
-        // Mise à jour du titre affiché avec le titre édité
-        this.displayTitle = this.editedTitle;
+        this.$emit("title-edited", this.editedTitle); // Émet le titre édité
+        this.displayTitle = this.editedTitle; // Met à jour displayTitle avec le titre édité
       }
-      // Désactivation du mode édition du titre
       this.editingTitle = false;
     },
-  },
-  // Méthode exécutée lors du montage du composant
-  mounted() {
-    // Récupération des tâches depuis le serveur
-    this.fetchTasks();
   },
 };
 </script>
 
-
 <style>
-/* Styles CSS personnalisés */
+/* Ajoutez votre style CSS personnalisé ici */
 .task-title {
   font-size: 36px;
   text-align: center;
   color: #bb9a87;
   margin-bottom: 30px;
-  cursor: pointer; /* Curseur indiquant que le titre est éditable */
+  cursor: pointer; /* Indique que le titre est éditable */
 }
 
 .task-title input {

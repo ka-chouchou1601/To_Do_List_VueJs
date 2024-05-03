@@ -1,54 +1,56 @@
 <template>
   <li>
     <div class="task-item">
+      <!-- Checkbox pour marquer la tâche comme terminée -->
       <input type="checkbox" v-model="isChecked" @click.stop>
+      <!-- Titre de la tâche -->
       <span v-if="!editing" :class="{ 'completed': isChecked }" @click="startEditing">{{ task.title }}</span>
+      <!-- Formulaire d'édition du titre -->
       <div v-else class="edit-form">
         <input type="text" v-model="editedTitle" @keyup.enter="saveEdit">
         <button @click="saveEdit"><i class="far fa-save"></i></button>
       </div>
     </div>
+    <!-- Bouton pour supprimer la tâche -->
     <button class="remove-btn" @click="removeTask"><i class="far fa-trash-alt"></i></button>
   </li>
 </template>
 
 <script>
 export default {
-  name: "TaskItem", // Nom du composant
-  
-  props: ["task"], // Propriétés passées au composant
+  name: "TaskItem",
+  props: ["task"], // Propriété de la tâche
   data() {
     return {
-      editing: false, // Indicateur d'édition du titre
-      editedTitle: this.task.title, // Titre édité de la tâche
+      editing: false, // Indique si la tâche est en cours d'édition
+      editedTitle: this.task.title, // Titre édité
     };
   },
   computed: {
-    isChecked: { // Propriété calculée pour vérifier si la tâche est cochée
+    isChecked: {
       get() {
-        return this.task.completed; // Renvoie l'état de complétion de la tâche
+        return this.task.completed; // Obtient l'état de complétion de la tâche
       },
-      set(value) { // Setter pour mettre à jour l'état de complétion de la tâche
-        this.$emit('update', { ...this.task, completed: value }); // Émet un événement avec la tâche mise à jour
+      set(value) {
+        this.$emit('update', { ...this.task, completed: value }); // Émet un événement pour mettre à jour l'état de complétion de la tâche
       }
     }
   },
   methods: {
-    startEditing() { // Méthode pour commencer l'édition du titre
-      this.editing = true; // Active le mode édition
+    startEditing() {
+      this.editing = true; // Démarre l'édition de la tâche
       this.editedTitle = this.task.title; // Initialise le titre édité avec le titre actuel de la tâche
     },
-    saveEdit() { // Méthode pour sauvegarder le titre édité
-      this.$emit('update', { ...this.task, title: this.editedTitle }); // Émet un événement avec le titre édité
-      this.editing = false; // Désactive le mode édition
+    saveEdit() {
+      this.$emit('update', { ...this.task, title: this.editedTitle }); // Émet un événement pour sauvegarder les modifications du titre
+      this.editing = false; // Arrête l'édition de la tâche
     },
-    removeTask() { // Méthode pour supprimer la tâche
-      this.$emit('remove'); // Émet un événement de suppression de la tâche
+    removeTask() {
+      this.$emit('remove'); // Émet un événement pour supprimer la tâche
     }
   }
 };
 </script>
-
 
 <style scoped>
 .task-item {
@@ -58,8 +60,8 @@ export default {
 }
 
 .completed {
-  text-decoration: line-through;
-  color: #888;
+  text-decoration: line-through; 
+  color: #888; 
 }
 
 .edit-form {

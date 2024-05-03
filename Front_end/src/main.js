@@ -1,14 +1,6 @@
-// Importation de la fonction createApp depuis Vue pour créer une application Vue
-import { createApp } from "vue";
+import { createApp } from "vue"; // Importation de la fonction createApp à partir de Vue
+import App from "./App.vue"; // Importation du composant App.vue
+import "./assets/css/main.css"; // Importation des styles CSS
 
-// Importation du composant principal App.vue
-import App from "./App.vue";
-
-// Importation des styles CSS principaux de l'application
-import "./assets/css/main.css";
-
-// Création de l'application Vue en utilisant le composant principal App.vue
-const app = createApp(App);
-
-// Montage de l'application Vue sur l'élément avec l'id "app" dans le DOM
-app.mount("#app");
+const app = createApp(App); // Création de l'application Vue
+app.mount("#app"); // Montage de l'application sur l'élément avec l'ID "app" dans le DOM

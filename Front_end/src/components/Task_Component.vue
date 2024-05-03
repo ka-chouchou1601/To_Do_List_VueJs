@@ -1,4 +1,4 @@
-\<template>
+<template>
   <div class="container">
     <div class="task">
       <!-- Titre de la tâche -->
